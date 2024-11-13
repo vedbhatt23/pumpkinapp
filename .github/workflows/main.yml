@@ -27,14 +27,20 @@ jobs:
           dvc init  # Initialize DVC repo if not initialized already
           
           # Set up DVC remote (Azure Blob Storage) with credentials from GitHub secrets
-          dvc remote add -d myremote azure://dataset  # Use your Azure Blob Storage container name 'dataset'
+          dvc remote add -d myremote azure://dataset/<path_to_directory>  # Use your Azure Blob Storage container name 'dataset'
           dvc remote modify myremote --local account_name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
           dvc remote modify myremote --local account_key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
           
           # Pull data and model from DVC remote
           dvc pull
 
-      # Step 3: Push to Hugging Face Hub
+      # Step 3: Configure Git user name and email
+      - name: Configure Git user
+        run: |
+          git config --global user.name Ved Bhatt
+          git config --global user.email vedbhatt2300@gmail.com
+        
+      # Step 4: Push to Hugging Face Hub
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -43,7 +49,7 @@ jobs:
           git commit -m "Sync model and data"
           git push --force https://ved-1123:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/ved-1123/pumpkin-app main
 
-      # Step 4: Push DVC files
+      # Step 5: Push DVC files
       - name: Push DVC files
         run: |
           dvc push  # Push changes (model, data) to DVC remote
