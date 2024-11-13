@@ -27,7 +27,7 @@ jobs:
           dvc init  # Initialize DVC repo if not initialized already
           
           # Set up DVC remote (Azure Blob Storage) with credentials from GitHub secrets
-          dvc remote add -d myremote azure://dataset/<path_to_directory>  # Use your Azure Blob Storage container name 'dataset'
+          dvc remote add -d myremote azure://dataset  # Use your Azure Blob Storage container name 'dataset'
           dvc remote modify myremote --local account_name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
           dvc remote modify myremote --local account_key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
           
